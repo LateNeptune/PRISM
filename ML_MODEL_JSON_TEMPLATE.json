@@ -1,0 +1,20 @@
+{
+  "metadata": {
+    "project_id": "PROJ_XXXX",
+    "region": "Region Name",
+    "supplier": "Supplier Company Name Ltd."
+  },
+  "horizon_days": 120,
+  "forecast_start": "YYYY-MM-DD",
+  "forecast_end": "YYYY-MM-DD",
+  "total_predicted_demand": 0.0,
+  "forecast": [
+    {
+      "date": "YYYY-MM-DD",
+      "y_hat": 0.0,
+      "y_lower": 0.0,
+      "y_upper": 0.0
+    }
+  ]
+}
+

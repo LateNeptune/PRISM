@@ -1,0 +1,137 @@
+import { ReactNode, useState, useEffect } from "react";
+import { NavLink } from "@/components/NavLink";
+import {
+  Upload,
+  TrendingUp,
+  ShoppingCart,
+  Package,
+  FileText,
+  Home,
+  Sparkles,
+  PanelLeft,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import ProfilePanel from "@/components/ProfilePanel";
+import FloatingAIAssistant from "@/components/FloatingAIAssistant";
+
+interface DashboardLayoutProps {
+  children: ReactNode;
+}
+
+const navigation = [
+  { name: "Home", href: "/home", icon: Home },
+  { name: "Data Upload", href: "/upload", icon: Upload },
+  { name: "Forecast", href: "/forecast", icon: TrendingUp },
+  { name: "Procurement", href: "/procurement", icon: ShoppingCart },
+  { name: "Inventory", href: "/inventory", icon: Package },
+  { name: "Reports", href: "/reports", icon: FileText },
+];
+
+const DashboardLayout = ({ children }: DashboardLayoutProps) => {
+  const [profileOpen, setProfileOpen] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    // Initialize from localStorage, default to false (expanded)
+    const saved = localStorage.getItem("prism-sidebar-collapsed");
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  // Persist sidebar state to localStorage
+  useEffect(() => {
+    localStorage.setItem("prism-sidebar-collapsed", JSON.stringify(sidebarCollapsed));
+  }, [sidebarCollapsed]);
+
+  const toggleSidebar = () => {
+    setSidebarCollapsed(!sidebarCollapsed);
+  };
+
+  return (
+    <div className="min-h-screen flex w-full">
+      {/* Sidebar with Glass Effect - Fixed Position with Collapsible Functionality */}
+      <aside
+        className={cn(
+          "fixed left-0 top-0 h-screen bg-silver-gradient dark:bg-silver-gradient-dark border-r border-border/50 flex flex-col backdrop-blur-sm z-40 transition-all duration-300 ease-in-out overflow-hidden",
+          sidebarCollapsed ? "w-0 -translate-x-full" : "w-64 translate-x-0"
+        )}
+      >
+        <div className="p-6 border-b border-border/50">
+          <div className="flex flex-col items-center space-y-3">
+            {/* Logo */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-teal-gradient rounded-full blur-lg opacity-30" />
+              <img
+                src="/logo.png"
+                alt="PRISM Logo"
+                className="h-16 w-auto object-contain relative z-10"
+              />
+            </div>
+            <div className="text-center">
+              <div className="flex items-center justify-center gap-2">
+                <h2 className="text-xl font-bold bg-gradient-to-r from-foreground to-muted-foreground bg-clip-text text-transparent">
+                  PRISM
+                </h2>
+                <Sparkles className="h-4 w-4 text-teal-500" />
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Supply Chain AI</p>
+            </div>
+          </div>
+        </div>
+        <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
+          {navigation.map((item) => (
+            <NavLink
+              key={item.name}
+              to={item.href}
+              end
+              className="flex items-center space-x-3 px-4 py-3 rounded-xl text-foreground hover:bg-white/50 dark:hover:bg-black/20 transition-all duration-300 group"
+              activeClassName="bg-teal-gradient text-white font-medium shadow-lg glow-teal"
+            >
+              <item.icon className="h-5 w-5 group-hover:scale-110 transition-transform" />
+              <span>{item.name}</span>
+            </NavLink>
+          ))}
+        </nav>
+      </aside>
+
+      {/* Main Content - Dynamic left margin based on sidebar state */}
+      <div
+        className={cn(
+          "flex-1 flex flex-col transition-all duration-300 ease-in-out",
+          sidebarCollapsed ? "ml-0" : "ml-64"
+        )}
+      >
+        {/* Header with Glass Effect */}
+        <header className="glass border-b border-border/50 px-6 py-4 sticky top-0 z-30">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              {/* Sidebar Toggle Button */}
+              <button
+                onClick={toggleSidebar}
+                className="h-11 w-11 rounded-full bg-teal-gradient text-white flex items-center justify-center hover:scale-110 transition-all duration-300 shadow-lg glow-teal cursor-pointer focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+                aria-label={sidebarCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+              >
+                <PanelLeft className="h-5 w-5" />
+              </button>
+              <p className="text-sm text-muted-foreground">PowerGrid Infrastructure Pvt. Ltd.</p>
+            </div>
+            <button
+              onClick={() => setProfileOpen(true)}
+              className="h-11 w-11 rounded-full bg-teal-gradient text-white flex items-center justify-center font-medium hover:scale-110 transition-all duration-300 shadow-lg glow-teal cursor-pointer"
+            >
+              RP
+            </button>
+          </div>
+        </header>
+
+        {/* Page Content */}
+        <main className="flex-1 p-6 overflow-auto">{children}</main>
+      </div>
+
+      {/* Floating AI Assistant */}
+      <FloatingAIAssistant />
+
+      {/* Profile Panel */}
+      <ProfilePanel open={profileOpen} onOpenChange={setProfileOpen} />
+    </div>
+  );
+};
+
+export default DashboardLayout;
