@@ -181,7 +181,7 @@ const Procurement = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        {/* <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">CO₂ Reduction</CardTitle>
             <Leaf className="h-4 w-4 text-success" />
@@ -190,7 +190,7 @@ const Procurement = () => {
             <div className="text-2xl font-bold text-foreground">315 tons</div>
             <p className="text-xs text-success mt-1">18% lower emissions</p>
           </CardContent>
-        </Card>
+        </Card> */}
       </div>
 
       {/* Procurement Table */}
